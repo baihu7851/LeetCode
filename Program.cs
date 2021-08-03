@@ -54,7 +54,7 @@ namespace LeetCode
 
         private static string OutPut(IEnumerable<int> ans)
         {
-            return ans.Aggregate("", (current, i) => current + i + " ");
+            return ans.Aggregate((string)null, (current, i) => current + i + " ").Trim();
         }
     }
 }
