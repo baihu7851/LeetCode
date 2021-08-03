@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LeetCode
 {
@@ -7,76 +8,53 @@ namespace LeetCode
     {
         private static void Main(string[] args)
         {
-            var ans = new List<int>();
-            Step(4, 1, 4, ref ans);
-            foreach (var a in ans)
-            {
-                Console.Write(a + " ");
-            }
-            Console.WriteLine();
+            Stack<int> ans = new();
+            // 高度、最小值數大於0，且最大值大於最小值
+            Step(4, 2, 6, ref ans);
             Console.ReadKey();
         }
 
-        private static void Step(int x, int n, int m, ref List<int> ans)
+        private static void Step(int high, int min, int max, ref Stack<int> ans)
         {
-            if (x < n)
+            if (high < min)
             {
-                Console.WriteLine($"樓梯有{x}階，{n}步無法行走");
-                if (ans.Count > 0)
-                {
-                    ans.RemoveAt(ans.Count - 1);
-                }
+                //Console.WriteLine($"樓梯有{high}階，{min}步無法行走");
+                ans.Pop();
             }
-            if (x == n)
+            if (high == min)
             {
-                ans.Add(x);
-                Console.WriteLine($"樓梯有{x}階，{n}步剛好走一次");
-                foreach (var a in ans)
-                {
-                    Console.Write(a + " ");
-                }
-                Console.WriteLine();
-                Console.WriteLine("走路完成");
-                ans.RemoveAt(ans.Count - 1);
+                ans.Push(min);
+                //Console.WriteLine($"樓梯有{high}階，{min}步剛好走一次");
+                Console.WriteLine(OutPut(ans));
+                //Console.WriteLine("完成");
+                ans.Pop();
             }
-            if (x > n)
+            else
             {
-                for (var i = n; i <= m; i++)
+                for (var i = min; i <= max; i++)
                 {
-                    if (x - i >= n)
+                    if (high - i >= min)
                     {
-                        ans.Add(i);
-                        Console.WriteLine($"走{i}步，樓梯還有{x - i}階");
-                        Step(x - i, n, m, ref ans);
-                        if (ans.Count > 0)
-                        {
-                            ans.RemoveAt(ans.Count - 1);
-                        }
+                        ans.Push(i);
+                        //Console.WriteLine($"走{i}步，樓梯還有{high - i}階");
+                        Step(high - i, min, max, ref ans);
+                        ans.Pop();
                     }
-                    else
+                    else if (high - i == 0)
                     {
-                        if (x - i == 0)
-                        {
-                            ans.Add(i);
-                            Console.WriteLine($"樓梯有{x}階，{i}步剛好走一次");
-                            foreach (var a in ans)
-                            {
-                                Console.Write(a + " ");
-                            }
-                            Console.WriteLine();
-                            Console.WriteLine("走路完成");
-                            if (ans.Count > 0)
-                            {
-                                ans.RemoveAt(ans.Count - 1);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"樓梯有{x}階，走了{i}步後剩下，{x - i}階無法行走-清除");
-                        }
+                        ans.Push(i);
+                        //Console.WriteLine($"樓梯有{high}階，{i}步剛好走一次");
+                        Console.WriteLine(OutPut(ans));
+                        //Console.WriteLine("完成");
+                        ans.Pop();
                     }
                 }
             }
+        }
+
+        private static string OutPut(IEnumerable<int> ans)
+        {
+            return ans.Aggregate("", (current, i) => current + i + " ");
         }
     }
 }
